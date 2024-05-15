@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 # Create your models here.
 class User(models.Model):
 
@@ -9,6 +9,7 @@ class User(models.Model):
     password = models.CharField(max_length=100)
     followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers_rel")
     followed = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followed_rel")
+    
     class Meta:
         verbose_name_plural = "Users"
 
@@ -20,6 +21,8 @@ class Song(models.Model):
     name = models.CharField(max_length=100)
     #artist
     url = models.URLField()
+    def get_absolute_url(self):
+        return reverse("Song", kwargs={"song_id": self.id})
     class Meta:
         verbose_name_plural = "Songs"
 

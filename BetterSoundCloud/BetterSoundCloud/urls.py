@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('Profile/<str:username>', Profile, name = "Profile"),
     path("song/<int:song_id>", DetailSong, name = "Song"),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     # path("Playlist/<int:playlist_id>", Playlist, name = "Playlist"),
     # path("Playlist/<int:playlist_id>/AddSong/<int:song_id>", AddSong, name = "AddSong"),
     # path("Playlist/<int:playlist_id>/RemoveSong/<int:song_id>", RemoveSong, name = "RemoveSong"),

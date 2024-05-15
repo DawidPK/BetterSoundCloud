@@ -1,17 +1,34 @@
-{% extends "SoundSky/main_page.html" %}
-
-{% block title %}Home{% endblock %}
-
+{% extends "SoundSky/main_page.html" %} {% block title %}Home{% endblock %}
 {% block content %}
-<div style="text-align: center;">
-    <h1>Search for a song</h1>
-    <form method="POST" action="{% url 'Home' %}">
-        {% csrf_token %}
-        <input type="text" name="search_bar" placeholder="Search for a song" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
-        <button type="submit" style="padding: 10px 20px; border-radius: 5px; background-color: #898989; color: white; border: none;">Search</button>
-    </form>
+<div style="text-align: center">
+  <h1>Search for a song</h1>
+  <form method="GET" action="{% url 'Home' %}">
+    {% csrf_token %}
+    <input
+      type="text"
+      name="search_bar"
+      placeholder="Search for a song"
+      style="padding: 10px; border-radius: 5px; border: 1px solid #ccc"
+    />
+    <button
+      type="submit"
+      style="
+        padding: 10px 20px;
+        border-radius: 5px;
+        background-color: #898989;
+        color: white;
+        border: none;
+      "
+    >
+      Search
+    </button>
+  </form>
 </div>
-{%for q in query%}
-{%console.log(q)%}
-{%endfor%}
+
+<div>
+  {% for song in Songs %}
+  <a>Nazwa: {{song.name}}</a>
+  <a href="{{song.get_absolute_url}}">Przejdź do strony piosenki</a>
+  {% endfor %}
+</div>
 {% endblock %}

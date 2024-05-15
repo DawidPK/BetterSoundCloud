@@ -19,5 +19,15 @@ def DetailSong(request, song_id):
     return render(request, 'SoundSky/song_page.html', ctx)
 
 def Search(request):
+    
     query = request.GET.get('search_bar', '')
-    return render(request, 'Soundsky/search_page.html', {'query': query})
+    print("Tutaj am być to od debugowania: " + str(query))
+    songs = Song.objects.all()
+    Wong = []
+    for song in songs:    
+        if song.name == query:
+            Wong.append(song)
+    ctx = {
+            'Songs':Wong
+        }    
+    return render(request, 'Soundsky/search_page.html', ctx)
