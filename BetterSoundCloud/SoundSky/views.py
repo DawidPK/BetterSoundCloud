@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.contrib.auth import logout
 from .models import *
 # from .forms import *
 
@@ -31,3 +31,6 @@ def Search(request):
             'Songs':Wong
         }    
     return render(request, 'Soundsky/search_page.html', ctx)
+def logout_view(request):
+    logout(request)
+    return redirect('Home')
