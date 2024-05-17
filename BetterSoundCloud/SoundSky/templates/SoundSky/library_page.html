@@ -1,0 +1,11 @@
+{% extends "SoundSky/main_page.html" %}
+
+{% block title %}Biblioteka{% endblock %}
+
+{% block content %}
+    <a href="{% url 'Add Playlist'%}">Stwórz playlistę</a>
+    <br>
+    {% for pl in Playlists %}
+    <p><a href="{{pl.get_absolute_url}}">{{pl.name}}</a></p>
+    {% endfor %}
+{% endblock %}

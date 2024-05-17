@@ -34,7 +34,8 @@ class Playlist(models.Model):
         name = models.CharField(max_length=100)
         user = models.ForeignKey(User, on_delete=models.CASCADE)
         songs = models.ManyToManyField(Song)
-
+        def get_absolute_url(self):
+            return reverse("Playlist", kwargs={"playlist_id": self.id})
         class Meta:
             verbose_name_plural = "Playlists"
     
