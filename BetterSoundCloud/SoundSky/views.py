@@ -16,13 +16,22 @@ def Profile(request, username):
         'User': user
     }
     return render(request, 'SoundSky/user_page.html', ctx) 
-@login_required
+# @login_required
 def DetailSong(request, song_id):
-    song = get_object_or_404(Song, id = song_id)
-    ctx = {
-        'Song': song
-    }
-    return render(request, 'SoundSky/song_page.html', ctx)
+    if request.method == "POST":
+        playlist_id = request.POST.get('playlist')
+        playlist = Playlist.objects.get(id=playlist_id)
+        song = Song.objects.get(id=song_id)
+        playlist.songs.add(song)
+        return redirect('Playlist', playlist_id=playlist_id)
+    else:
+        song = get_object_or_404(Song, id = song_id)
+        playlists = Playlist.objects.all()   
+        ctx = {
+            'Song': song,
+            'Playlists': playlists
+        }
+        return render(request, 'SoundSky/song_page.html', ctx)
 
 def Search(request):
     query = request.GET.get('search_bar', '')

@@ -21,6 +21,7 @@ class Song(models.Model):
     name = models.CharField(max_length=100)
     #artist
     url = models.URLField()
+    Playlist = models.ManyToManyField("Playlist", blank=True)
     def get_absolute_url(self):
         return reverse("Song", kwargs={"song_id": self.id})
     class Meta:
