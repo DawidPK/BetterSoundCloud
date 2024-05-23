@@ -9,7 +9,9 @@ from django.contrib.auth.decorators import login_required
 
 from .models import *
 from django.contrib.auth.models import User
+
 from .models import Followers, Follows
+
 # from .forms import *
 
 # Create your views here.
@@ -67,10 +69,12 @@ def register(request):
             user = form.save()
             # This saves the user to the database
             # Create followers and followed in database with the same primary key as user
+
             followers = Followers(user_being_followed=user)
             followers.save()
             follows = Follows(user_that_follows=user)
             follows.save()
+
             # You need to authenticate the user here before logging them in
             login(request, user)
             return redirect('Home')
@@ -87,6 +91,14 @@ def create_playlist(request):
         return redirect('Library')
     else:
         return render(request, 'Soundsky/add_playlist.html')
+
+
+
+def delete_playlist(request, playlist_id):
+    playlist = get_object_or_404(Playlist, id=playlist_id)
+    playlist.delete()
+    return redirect('Library')  
+
 @login_required
 def library(request):
     user = request.user
@@ -97,6 +109,8 @@ def library(request):
         'Playlists': playlists
     }
     return render(request, 'Soundsky/library_page.html', ctx)
+
+
 def playlist_detail(request, playlist_id):
     playlist = get_object_or_404(Playlist, id = playlist_id)
     songs = playlist.songs.all()
