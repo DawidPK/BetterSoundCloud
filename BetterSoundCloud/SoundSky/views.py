@@ -1,3 +1,4 @@
+from __future__ import print_function
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
@@ -10,8 +11,8 @@ from .models import *
 
 # Create your views here.
 @login_required
-def Profile(request, username):
-    user = get_object_or_404(User, name = username)
+def Profile(request):
+    user = request.user
     ctx = { 
         'User': user
     }
@@ -19,14 +20,14 @@ def Profile(request, username):
 # @login_required
 def DetailSong(request, song_id):
     if request.method == "POST":
-        playlist_id = request.POST.get('playlist')
+        playlist_id = request.POST.get('plays')
         playlist = Playlist.objects.get(id=playlist_id)
         song = Song.objects.get(id=song_id)
         playlist.songs.add(song)
-        return redirect('Playlist', playlist_id=playlist_id)
+        return redirect('Song', song_id=song_id)
     else:
         song = get_object_or_404(Song, id = song_id)
-        playlists = Playlist.objects.all()   
+        playlists = Playlist.objects.filter(user=request.user)   
         ctx = {
             'Song': song,
             'Playlists': playlists
@@ -60,14 +61,14 @@ def register(request):
 def create_playlist(request):
     if request.method == "POST":
         name = request.POST.get('name')
-        user = User.objects.get(name=request.user)
+        user = request.user
         playlist = Playlist(name=name, user=user)
         playlist.save()
-        return redirect('playlist_detail', playlist_id=playlist.id)
+        return redirect('Library')
     else:
         return render(request, 'Soundsky/add_playlist.html')
 def library(request):
-    user = User.objects.get(name=request.user)
+    user = request.user
 
     playlists = Playlist.objects.filter(user=user)
     print(playlists)
@@ -76,9 +77,11 @@ def library(request):
     }
     return render(request, 'Soundsky/library_page.html', ctx)
 def playlist_detail(request, playlist_id):
-    playlist = get_object_or_404(Song, id = playlist_id)
+    playlist = get_object_or_404(Playlist, id = playlist_id)
+    songs = playlist.songs.all()
     ctx = {
-        'Playlist': playlist
+        'Playlist': playlist,
+        'Songs': songs
     }
     return render(request, 'SoundSky/playlist_detail.html', ctx)
 

@@ -22,7 +22,7 @@ from SoundSky.views import *
 urlpatterns = [
     path('', Search, name = "Home"),
     path('admin/', admin.site.urls),
-    path('Profile/<str:username>', Profile, name = "Profile"),
+    path('Profile', Profile, name = "Profile"),
     path("Song/<int:song_id>", DetailSong, name = "Song"),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('logout/', logout_view, name='logout'),
