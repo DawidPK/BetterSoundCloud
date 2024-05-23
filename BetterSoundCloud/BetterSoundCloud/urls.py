@@ -31,6 +31,10 @@ urlpatterns = [
     path('Profile/Library/', library, name="Library"),
     path("Playlist/<int:playlist_id>", playlist_detail, name = "Playlist"),
     path("AddSong", add_song_path, name = "AddSong"),
+
+    path("Profile/<str:username>", user_profile, name = "User"),
+    path("Follow/<str:username>", follow, name = "Follow"),
+
     path("DeletePlaylist/<int:playlist_id>", delete_playlist , name = "DeletePlaylist"),
     # ...
     # path("Playlist/<int:playlist_id>", Playlist, name = "Playlist"),

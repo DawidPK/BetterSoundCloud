@@ -5,6 +5,11 @@
 {% block content %}
     <h1>User Profile</h1>
     <p>Name: {{ User.username }}</p>
-    <p>Email: {{ User.email }}</p>
+    <p>Follows: {{ Following }}</p>
+    <p>Followers: {{ Followers }}</p>
+    {% if User.email %}
+        <p>Email: {{ User.email }}</p>
+    {% endif %}
+
     <!-- Add more user data here -->
 {% endblock %}

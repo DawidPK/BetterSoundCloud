@@ -1,4 +1,5 @@
 from __future__ import print_function
+import re
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
@@ -8,14 +9,23 @@ from django.contrib.auth.decorators import login_required
 
 from .models import *
 from django.contrib.auth.models import User
+
+from .models import Followers, Follows
+
 # from .forms import *
 
 # Create your views here.
-@login_required
+
 def Profile(request):
     user = request.user
+    followers = Followers.objects.get(user_being_followed=user)
+    follows = Follows.objects.get(user_that_follows=user)
+    follower_count = followers.followers.count()
+    following_count = follows.users_being_followed.count()
     ctx = { 
-        'User': user
+        'User': user,
+        'Followers': follower_count,
+        'Following': following_count
     }
     return render(request, 'SoundSky/user_page.html', ctx) 
 # @login_required
@@ -38,8 +48,12 @@ def DetailSong(request, song_id):
 def Search(request):
     query = request.GET.get('search_bar', '')
     songs = Song.objects.filter(name__icontains=query)
+    users = User.objects.filter(username__icontains=query)
+    playlists = Playlist.objects.filter(name__icontains=query)
     ctx = {
-        'Songs': songs
+        'Songs': songs,
+        'Users': users,
+        'Playlists': playlists
     }
     return render(request, 'Soundsky/search_page.html', ctx)
 
@@ -55,10 +69,14 @@ def register(request):
             user = form.save()
             # This saves the user to the database
             # Create followers and followed in database with the same primary key as user
-            user.followers = User.objects.filter(followed=user)
-            user.followed = User.objects.filter(followers=user)
-            user.save()
+
+            followers = Followers(user_being_followed=user)
+            followers.save()
+            follows = Follows(user_that_follows=user)
+            follows.save()
+
             # You need to authenticate the user here before logging them in
+            login(request, user)
             return redirect('Home')
     else:
         form = CreateUserForm()
@@ -73,6 +91,7 @@ def create_playlist(request):
         return redirect('Library')
     else:
         return render(request, 'Soundsky/add_playlist.html')
+
 
 
 def delete_playlist(request, playlist_id):
@@ -103,7 +122,7 @@ def playlist_detail(request, playlist_id):
 
 
     
-
+@login_required
 def add_song_path(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -113,4 +132,25 @@ def add_song_path(request):
         return redirect('Home')  # Replace render with redirect to return an HttpResponse object
     else:
         return render(request, 'SoundSky/add_song.html')
-
+def user_profile(request, username):
+    user = User.objects.get(username=username)
+    follows = Follows.objects.get(user_that_follows=request.user)
+    followers = Followers.objects.get(user_being_followed=user)
+    follower_count = followers.followers.count()
+    following_count = follows.users_being_followed.count()
+    ctx = {
+        'OtherUser': user,
+        'Followers': follower_count,
+        'Following': following_count
+    }
+    return render(request, 'SoundSky/other_user_page.html', ctx)
+def follow(request, username):
+    user = request.user
+    user_to_follow = User.objects.get(username=username)
+    follows = Follows.objects.get(user_that_follows=user)
+    follows.users_being_followed.add(user_to_follow)
+    follows.save()
+    followers = Followers.objects.get(user_being_followed=user_to_follow)
+    followers.followers.add(user)
+    followers.save()
+    return redirect('User', username=username)
