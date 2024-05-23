@@ -74,3 +74,15 @@ def playlist_detail(request, playlist_id):
     return render(request, 'SoundSky/playlist_detail.html', ctx)
 
 
+    
+
+def add_song_path(request):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        url = request.POST.get('url')
+        song = Song(name=name, url=url)
+        song.save()
+        return redirect('Home')  # Replace render with redirect to return an HttpResponse object
+    else:
+        return render(request, 'SoundSky/add_song.html')
+
