@@ -18,7 +18,22 @@ from django.conf import settings
 
 #     def __str__(self):
 #         return self.name
+class Followers(models.Model):
+    user_being_followed = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followed", primary_key=True)
+    followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers_rel")
+    class Meta:
+        verbose_name_plural = "Followers"
 
+    def __str__(self):
+        return str(self.user_being_followed)
+class Follows(models.Model):
+    user_that_follows = models.ForeignKey(User, on_delete=models.CASCADE, related_name="followers", primary_key=True)
+    users_being_followed = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followed_rel")
+    class Meta:
+        verbose_name_plural = "Follows"
+
+    def __str__(self):
+        return str(self.user_that_follows)
 class Song(models.Model):
 
     id = models.AutoField(primary_key=True)
