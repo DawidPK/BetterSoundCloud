@@ -5,7 +5,9 @@
 {% block content %}
     <h1>User Profile</h1>
     <p>Name: {{ OtherUser.username }}</p>
+    {% if is_following %}
     <a href="{% url 'Follow' username=OtherUser.username %}">Follow</a>
+    {% endif %}
     <p>Follows: {{ Following }}</p>
     <p>Followers: {{ Followers }}</p>
     <!-- Add more user data here -->
