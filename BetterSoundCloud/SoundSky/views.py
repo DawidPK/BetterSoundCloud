@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .forms import RegisterForm
+from .forms import CreateUserForm
 from django.contrib.auth.decorators import login_required
 
 from .models import *
+from django.contrib.auth.models import User
 # from .forms import *
 
 # Create your views here.
@@ -42,15 +43,24 @@ def logout_view(request):
     logout(request)
     return redirect('Home')
 
+from django.contrib.auth import authenticate  # Import the authenticate function
+
+from django.contrib.auth import authenticate  # Add the missing import statement
+
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()  # This saves the user to the database
-            # You need to authenticate the user here before logging them in
-            return redirect('Home')
+            # Authenticate the user
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)  # Use the authenticate function
+            if user is not None:
+                login(request, user)
+                return redirect('Home')
     else:
-        form = RegisterForm()
+        form = CreateUserForm()
     return render(request, 'accounts/register.html', {'form': form})
 @login_required
 def create_playlist(request):
