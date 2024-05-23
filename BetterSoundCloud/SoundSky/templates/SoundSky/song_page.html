@@ -2,6 +2,7 @@
 {% block title %}Song{% endblock %} 
 {% block content %}
 <h1>{{Song.name}}</h1>
+<h2><a href="{% url 'User' username=Song.user %}">{{Song.user}}</a></h2>
 {% comment %} Artist {% endcomment %}
 <audio controls>
   <source src="{{Song.url}}" />
