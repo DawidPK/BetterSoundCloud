@@ -1,4 +1,5 @@
 from __future__ import print_function
+from operator import is_
 import re
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
@@ -138,10 +139,12 @@ def user_profile(request, username):
     followers = Followers.objects.get(user_being_followed=user)
     follower_count = followers.followers.count()
     following_count = follows.users_being_followed.count()
+    is_following = follows.users_being_followed.filter(username=username).exists()
     ctx = {
         'OtherUser': user,
         'Followers': follower_count,
-        'Following': following_count
+        'Following': following_count,
+        'IsFollowing': is_following
     }
     return render(request, 'SoundSky/other_user_page.html', ctx)
 def follow(request, username):

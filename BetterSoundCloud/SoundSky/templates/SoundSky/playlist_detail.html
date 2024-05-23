@@ -2,10 +2,11 @@
 {% block title %}{{ playlist.name }}{% endblock %} 
 {% block content %} 
 {% csrf_token %}
-{% if Playlist.user == User %}
-    <h2><a href="{% url 'Profile' %}">{{User}}</a></h2>
+
+{% if Playlist.user.username == user.username %}
+    <h2><a href="{% url 'Profile' %}">{{user}}</a></h2>
 {% else %}
-    {% comment %} <h2><a href="{% url 'User' username=Playlist.user %}">{{Playlist.user}}</a></h2> {% endcomment %}
+    <h2><a href="{% url 'User' username=Playlist.user %}">{{Playlist.user}}</a></h2>
 
 {% endif %}
 
