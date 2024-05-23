@@ -30,6 +30,7 @@ urlpatterns = [
     path('Profile/Library/Add/Playlist', create_playlist, name='Add Playlist'),
     path('Profile/Library/', library, name="Library"),
     path("Playlist/<int:playlist_id>", playlist_detail, name = "Playlist"),
+    path("AddSong", add_song_path, name = "AddSong"),
     # ...
     # path("Playlist/<int:playlist_id>", Playlist, name = "Playlist"),
     # path("Playlist/<int:playlist_id>/AddSong/<int:song_id>", AddSong, name = "AddSong"),
