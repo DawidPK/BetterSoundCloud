@@ -2,33 +2,76 @@
 {% block content %}
 <div style="text-align: center">
   <h1>Search for a song</h1>
+  <script>
+    var slogans = [
+      "Znajdź swoją melodię marzeń!",
+      "Twoja ulubiona piosenka czeka na ciebie!",
+      "Odkryj dźwięki, które pokochasz ❤",
+      "Muzyka na wyciągnięcie ręki",
+      "Wyszukaj rytm swojego serca ❤",
+      "Znajdź dźwięk, który Cię poruszy",
+      "Twoja muzyczna podróż zaczyna się tutaj",
+      "Szukaj i słuchaj bez końca",
+      "Twój świat muzyki w jednym miejscu",
+      "Odkryj nowe brzmienia każdego dnia"
+    ];
+    var h1Element = document.querySelector("h1");
+    var randomIndex = Math.floor(Math.random() * slogans.length);
+    h1Element.textContent = slogans[randomIndex];
+  </script>
   <form method="GET" action="{% url 'Home' %}">
     {% csrf_token %}
     <input
       type="text"
       name="search_bar"
       placeholder="Search for a song"
-      style="padding: 10px; border-radius: 5px; border: 1px solid #ccc"
+      style="padding: 10px; border-radius: 5px; border: 2px solid #3286ed; font-size: 25px;"
     />
     <button
-      type="submit"
-      style="
-        padding: 10px 20px;
-        border-radius: 5px;
-        background-color: #898989;
-        color: white;
-        border: none;
-      "
+      type="submit" class="bg-primary"
+      style="padding: 10px 20px; border-radius: 5px; color: white; border: none; font-size: 25px;"
     >
       Search
     </button>
   </form>
 </div>
+<style>
+  
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+  }
+ .inside {
+    padding: 10px;
+    margin: 10px;
+    width: 50%;
+    text-align: center;
+    background-color: 007bff;
+  }
+  a:hover {
+    color: rgba(125, 125, 125, 0.722);
+    text-decoration: none;
+  }
+  a {
+    color: white;
+  }
+  h1 {
+    font-size: 60px;
+    font-weight: bold;
+    color:#b5b5b5d1;
+    padding-bottom: 40px;
+  }
 
-<div>
-  {% for song in Songs %}
-  <a>Nazwa: {{song.name}}</a><br>
-  <a href="{{song.get_absolute_url}}">Przejdź do strony piosenki</a> <br><br>
+
+</style>
+<div class="container">
+  {% for song in Songs %} 
+    <a class="inside bg-primary rounded text-light" href="{{song.get_absolute_url}}" style="font-size: 40px; font-weight: bold; padding-top: 30px; padding-bottom: 30px;">{{song.name}}</a><br>
   {% endfor %}
 </div>
+
+
 {% endblock %}
