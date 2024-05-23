@@ -1,27 +1,32 @@
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+from django.conf import settings
+
 # Create your models here.
-class User(models.Model):
+# class User(models.Model):
 
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100, unique=True)
-    email = models.EmailField()
-    password = models.CharField(max_length=100)
-    followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers_rel")
-    followed = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followed_rel")
+#     id = models.AutoField(primary_key=True)
+#     name = models.CharField(max_length=100, unique=True)
+#     email = models.EmailField()
+#     password = models.CharField(max_length=100)
+#     followers = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followers_rel")
+#     followed = models.ManyToManyField("self", symmetrical=False, blank=True, related_name="followed_rel")
     
-    class Meta:
-        verbose_name_plural = "Users"
+#     class Meta:
+#         verbose_name_plural = "Users"
 
-    def __str__(self):
-        return self.name
+#     def __str__(self):
+#         return self.name
+
 class Song(models.Model):
 
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     #artist
     url = models.URLField()
-    Playlist = models.ManyToManyField("Playlist", blank=True)
+    # Playlist = models.ManyToManyField("Playlist", blank=True)
     def get_absolute_url(self):
         return reverse("Song", kwargs={"song_id": self.id})
     class Meta:
@@ -30,18 +35,20 @@ class Song(models.Model):
     def __str__(self):
         return self.name
     
+
+
 class Playlist(models.Model):
-        id = models.AutoField(primary_key=True)
-        name = models.CharField(max_length=100)
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        songs = models.ManyToManyField(Song)
-        def get_absolute_url(self):
-            return reverse("Playlist", kwargs={"playlist_id": self.id})
-        class Meta:
-            verbose_name_plural = "Playlists"
-    
-        def __str__(self):
-            return self.name
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    songs = models.ManyToManyField(Song)
+    def get_absolute_url(self):
+        return reverse("Playlist", kwargs={"playlist_id": self.id})
+    class Meta:
+        verbose_name_plural = "Playlists"
+
+    def __str__(self):
+        return self.name
         
 class Comment(models.Model):
         id = models.AutoField(primary_key=True)

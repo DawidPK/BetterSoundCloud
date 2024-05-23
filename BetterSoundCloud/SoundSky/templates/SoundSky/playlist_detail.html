@@ -1,0 +1,12 @@
+{% extends "SoundSky/main_page.html" %} 
+{% block title %}{{ playlist.name }}{% endblock %} 
+{% block content %} 
+{% csrf_token %}
+{% for Song in Songs %}
+<a href="{{Song.get_absolute_url}}">{{Song.name}}</a> <br><br>
+{% comment %}
+<p>{{ playlist.description }}</p>
+{% endcomment %}
+<!-- Add more playlist data here -->
+{% endfor %} 
+{% endblock %}
