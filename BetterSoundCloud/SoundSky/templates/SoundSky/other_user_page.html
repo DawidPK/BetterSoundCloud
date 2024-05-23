@@ -1,0 +1,12 @@
+{% extends "SoundSky/main_page.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+    <h1>User Profile</h1>
+    <p>Name: {{ OtherUser.username }}</p>
+    <a href="{% url 'Follow' username=OtherUser.username %}">Follow</a>
+    <p>Follows: {{ Following }}</p>
+    <p>Followers: {{ Followers }}</p>
+    <!-- Add more user data here -->
+{% endblock %}
