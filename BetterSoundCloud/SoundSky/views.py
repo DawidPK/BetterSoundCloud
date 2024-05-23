@@ -25,18 +25,13 @@ def DetailSong(request, song_id):
     return render(request, 'SoundSky/song_page.html', ctx)
 
 def Search(request):
-    
     query = request.GET.get('search_bar', '')
-    print("Tutaj am być to od debugowania: " + str(query))
-    songs = Song.objects.all()
-    Wong = []
-    for song in songs:    
-        if song.name == query:
-            Wong.append(song)
+    songs = Song.objects.filter(name__icontains=query)
     ctx = {
-            'Songs':Wong
-        }    
+        'Songs': songs
+    }
     return render(request, 'Soundsky/search_page.html', ctx)
+
 @login_required
 def logout_view(request):
     logout(request)
@@ -77,3 +72,5 @@ def playlist_detail(request, playlist_id):
         'Playlist': playlist
     }
     return render(request, 'SoundSky/playlist_detail.html', ctx)
+
+

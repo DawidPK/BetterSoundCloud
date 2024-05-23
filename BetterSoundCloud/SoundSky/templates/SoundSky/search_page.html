@@ -27,8 +27,8 @@
 
 <div>
   {% for song in Songs %}
-  <a>Nazwa: {{song.name}}</a>
-  <a href="{{song.get_absolute_url}}">Przejdź do strony piosenki</a>
+  <a>Nazwa: {{song.name}}</a><br>
+  <a href="{{song.get_absolute_url}}">Przejdź do strony piosenki</a> <br><br>
   {% endfor %}
 </div>
 {% endblock %}
