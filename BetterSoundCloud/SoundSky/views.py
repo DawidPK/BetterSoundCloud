@@ -16,7 +16,7 @@ def Profile(request, username):
         'User': user
     }
     return render(request, 'SoundSky/user_page.html', ctx) 
-# @login_required
+@login_required
 def DetailSong(request, song_id):
     if request.method == "POST":
         playlist_id = request.POST.get('playlist')
@@ -63,9 +63,10 @@ def create_playlist(request):
         user = User.objects.get(name=request.user)
         playlist = Playlist(name=name, user=user)
         playlist.save()
-        return redirect('playlist_detail', playlist_id=playlist.id)
+        return redirect('Playlist', playlist_id=playlist.id)
     else:
         return render(request, 'Soundsky/add_playlist.html')
+@login_required
 def library(request):
     user = User.objects.get(name=request.user)
 
@@ -84,7 +85,7 @@ def playlist_detail(request, playlist_id):
 
 
     
-
+@login_required
 def add_song_path(request):
     if request.method == "POST":
         name = request.POST.get('name')
