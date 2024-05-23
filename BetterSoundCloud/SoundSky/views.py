@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .forms import RegisterForm
+from .forms import CreateUserForm
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -48,13 +48,13 @@ def logout_view(request):
 
 def register(request):
     if request.method == "POST":
-        form = RegisterForm(request.POST)
+        form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()  # This saves the user to the database
             # You need to authenticate the user here before logging them in
             return redirect('Home')
     else:
-        form = RegisterForm()
+        form = CreateUserForm()
     return render(request, 'accounts/register.html', {'form': form})
 @login_required
 def create_playlist(request):
