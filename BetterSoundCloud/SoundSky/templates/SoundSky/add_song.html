@@ -3,10 +3,7 @@
 {% block content %}
 <form method="post">
     {% csrf_token %}
-    <label for="name">Song Name:</label>
-    <input type="text" id="name" name="name"><br>
-    <label for="name">Song Url:</label>
-    <input type="text" id="url" name="url"><br>
+    {{ form.as_p }}
     <button type="submit">Add Song</button>
   </form>
 {% endblock %}

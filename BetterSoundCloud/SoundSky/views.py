@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from .forms import CreateUserForm
+from .forms import CreateUserForm, song_form
 from django.contrib.auth.decorators import login_required
 
 from .models import *
@@ -18,9 +18,20 @@ from django.contrib.auth.models import User
 @login_required
 def Profile(request):
     user = request.user
-    ctx = { 
-        'User': user
+    follows = Follows.objects.get(user_that_follows=request.user)
+    followers = Followers.objects.get(user_being_followed=user)
+    follower_count = followers.followers.count()
+    songs = Song.objects.filter(user=user)
+    playlists = Playlist.objects.filter(user=user)    
+    following_count = follows.users_being_followed.count()
+    ctx = {
+        'User': user,
+        'Followers': follower_count,
+        'Following': following_count,
+        'Playlists': playlists,
+        'Songs': songs
     }
+        
     return render(request, 'SoundSky/user_page.html', ctx) 
 # @login_required
 def DetailSong(request, song_id):
@@ -59,10 +70,13 @@ def register(request):
             user = form.save()
             # This saves the user to the database
             # Create followers and followed in database with the same primary key as user
-            user.followers = User.objects.filter(followed=user)
-            user.followed = User.objects.filter(followers=user)
+            followers = Followers(user_being_followed=user)
+            followers.save()
+            follows = Follows(user_that_follows=user)
+            follows.save()
             user.save()
             # You need to authenticate the user here before logging them in
+            login(request, user)
             return redirect('Home')
     else:
         form = CreateUserForm()
@@ -99,9 +113,11 @@ def library(request):
 def playlist_detail(request, playlist_id):
     playlist = get_object_or_404(Playlist, id = playlist_id)
     songs = playlist.songs.all()
+    song_count = songs.count()
     ctx = {
         'Playlist': playlist,
-        'Songs': songs
+        'Songs': songs,
+        "count": song_count 
     }
     return render(request, 'SoundSky/playlist_detail.html', ctx)
 
@@ -110,26 +126,35 @@ def playlist_detail(request, playlist_id):
 
 def add_song_path(request):
     if request.method == "POST":
-        name = request.POST.get('name')
-        url = request.POST.get('url')
-        song = Song(name=name, url=url)
-        song.save()
-        return redirect('Home')  # Replace render with redirect to return an HttpResponse object
+        form = song_form(request.POST)
+        if form.is_valid():
+            song = form.save()
+            song.user = request.user
+            song.save()
+        # name = request.POST.get('name')
+        # url = request.POST.get('url')
+        # user = request.user
+        # song = Song(name=name, url=url, user=user)
+        # song.save()
+            return redirect('Home')  # Replace render with redirect to return an HttpResponse object
     else:
-        return render(request, 'SoundSky/add_song.html')
+        form = song_form()
+    return render(request, 'SoundSky/add_song.html', {'form': form})
 
 def user_profile(request, username):
     user = User.objects.get(username=username)
     follows = Follows.objects.get(user_that_follows=request.user)
     followers = Followers.objects.get(user_being_followed=user)
     follower_count = followers.followers.count()
+    songs = Song.objects.filter(user=user)
+    playlists = Playlist.objects.filter(user=user)    
     following_count = follows.users_being_followed.count()
-    is_following = follows.users_being_followed.filter(username=username).exists()
     ctx = {
         'OtherUser': user,
         'Followers': follower_count,
         'Following': following_count,
-        'IsFollowing': is_following
+        'Playlists': playlists,
+        'Songs': songs
     }
     return render(request, 'SoundSky/other_user_page.html', ctx)
 def follow(request, username):

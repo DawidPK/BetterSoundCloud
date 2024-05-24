@@ -2,6 +2,7 @@ from django import forms
 # from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User  # Add this import statement
+from .models import Song  # Add this import statement
 
 class CreateUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -16,3 +17,10 @@ class CreateUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class song_form(forms.Form):
+    name = forms.CharField()
+    Url = forms.URLField()
+    class Meta:
+        model = Song
+        fields = ["name", "url"]

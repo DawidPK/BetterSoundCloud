@@ -2,19 +2,18 @@
 {% block title %}{{ playlist.name }}{% endblock %} 
 {% block content %} 
 {% csrf_token %}
-
+<h1 class="container d-flex justify-content-center align-items-center">{{ Playlist.name }}</h1>
 {% if Playlist.user.username == user.username %}
-    <h2><a href="{% url 'Profile' %}">{{user}}</a></h2>
+    <h2 class="container d-flex justify-content-center align-items-center">Autor: <a href="{% url 'Profile' %}">{{user}}</a></h2>
 {% else %}
-    <h2><a href="{% url 'User' username=Playlist.user %}">{{Playlist.user}}</a></h2>
+    <h2 class="container d-flex justify-content-center align-items-center">Autor: <a href="{% url 'User' username=Playlist.user %}">{{Playlist.user}}</a></h2>
 
 {% endif %}
 
 {% for Song in Songs %}
-<a href="{{Song.get_absolute_url}}">{{Song.name}}</a> <br><br>
-{% comment %}
-<p>{{ playlist.description }}</p>
-{% endcomment %}
-<!-- Add more playlist data here -->
+    <a class="container d-flex justify-content-center align-items-center bg-primary rounded text-light" href="{{Song.get_absolute_url}}">{{Song.name}}</a> <br><br>
 {% endfor %} 
+{% if count == 0%}
+<p class="container d-flex justify-content-center align-items-center">Ta playlista niestety jeszce nie ma dodanych piosenek</p>
+{% endif %}
 {% endblock %}

@@ -3,8 +3,24 @@
 {% block title %}Profile{% endblock %}
 
 {% block content %}
-    <h1>User Profile</h1>
-    <p>Name: {{ User.username }}</p>
-    <p>Email: {{ User.email }}</p>
-    <!-- Add more user data here -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-20 offset-md-1">
+                <h1>{{ User.username }}</h1>
+                <p class="bigger-font">Follows: {{ Following }} Followers: {{ Followers }}</p>
+                <p></p>
+                {% if User.email %}
+                    <p class="bigger-font">Email: {{ User.email }}</p>
+                {% endif %}
+                <p class="bigger-font">Playlisty:</p>
+                {% for pl in Playlists %}
+                    <a class="inside bg-primary rounded text-light bigger-font" href="{{pl.get_absolute_url}}">{{pl.name}}</a>
+                {% endfor %}
+                <p class="bigger-font">Piosenki:</p>
+                {% for i in Songs %}
+                    <a class="inside bg-primary rounded text-light bigger-font" href="{{i.get_absolute_url}}">{{ i.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
 {% endblock %}
